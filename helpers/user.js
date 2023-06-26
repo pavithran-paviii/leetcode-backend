@@ -1,15 +1,22 @@
+const bcrypt = require("bcrypt");
+
 const User = require("../model/User");
 
 async function createUser(username, email, password) {
   const userExist = await findUserByEmail(email);
   if (userExist?.length > 0) {
-    console.log(userExist, "findUserByEmail userExist");
+    // console.log(userExist, "findUserByEmail userExist");
     return false;
   }
 
   try {
-    // const salt = 8;
-    const user = await User.create({ username, password, email });
+    const salt = 8;
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const user = await User.create({
+      username,
+      password: hashedPassword,
+      email,
+    });
     return user;
   } catch (error) {
     console.log("Error while creating user", error.message);
@@ -22,4 +29,4 @@ async function findUserByEmail(email) {
   return user;
 }
 
-module.exports = { createUser: createUser };
+module.exports = { createUser: createUser, findUserByEmail: findUserByEmail };
