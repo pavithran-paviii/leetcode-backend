@@ -5,9 +5,14 @@ const bcrypt = require("bcrypt");
 
 module.exports = {
   get: async (req, res) => {
-    const user = await User.find();
-    console.log(user, "User");
-    res.status(200).send(user);
+    try {
+      const user = await User.find();
+      console.log(user, "User");
+      res.status(200).send(user);
+    } catch (error) {
+      console.log(error?.message, "get users error");
+      res.status(500).send(error?.message);
+    }
   },
 
   createuser: async (req, res, next) => {
