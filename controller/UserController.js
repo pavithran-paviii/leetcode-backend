@@ -7,7 +7,7 @@ module.exports = {
   get: async (req, res) => {
     try {
       const user = await User.find();
-      console.log(user, "User");
+      // console.log(user, "User");
       res.status(200).send(user);
     } catch (error) {
       console.log(error?.message, "get users error");
@@ -17,12 +17,22 @@ module.exports = {
 
   createuser: async (req, res, next) => {
     const { username, email, password } = req.body;
-    const createuser = await createUser(username, email, password);
+    const userExist = await findUserByEmail(email);
 
-    if (createuser) {
-      res.status(200).send("User created successfully!!!");
+    if (userExist?.length > 0) {
+      res.status(409).json({ message: "User already exist!" });
     } else {
-      res.status(409).send("User already exist!");
+      try {
+        const createuser = await createUser(username, email, password);
+
+        if (createuser) {
+          res.status(200).json({ message: "User created successfully!!!" });
+        } else {
+          res.status(500).json({ message: "Error while creating user" });
+        }
+      } catch (error) {
+        res.status(500).json({ message: "Server error while create user" });
+      }
     }
   },
 
@@ -37,20 +47,24 @@ module.exports = {
           user[0]?.password
         );
 
-        console.log(isPasswordValid, "isPasswordValid");
+        // console.log(isPasswordValid, "isPasswordValid");
 
         if (isPasswordValid) {
-          console.log(isPasswordValid, "isPasswordValid");
-          res.status(200).send("Login successful");
-          console.log(user, "login user");
+          res
+            .status(200)
+            .json({ status: true, message: "login successful..." });
         } else {
-          res.status(401).send("Invalid username/password");
+          res
+            .status(200)
+            .json({ status: false, message: "Invalid username/password" });
         }
       } else {
-        res.status(400).send("User not found");
+        res.status(200).json({ status: false, message: "User not found" });
       }
     } catch (error) {
-      res.status(500).send("Server error while login");
+      res
+        .status(500)
+        .json({ status: false, message: "Server error while login" });
     }
   },
 };

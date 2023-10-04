@@ -22,7 +22,7 @@ app.use((req, res, next) => {
 });
 
 //routes
-app.use("/user", userRoute);
+app.use("/", userRoute);
 app.use("/problem", problemRoute);
 
 app.listen("3000", () => {
