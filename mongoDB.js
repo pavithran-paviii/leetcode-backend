@@ -7,7 +7,7 @@ function connectMongoDB() {
         "pavithran_paviii"
       )}:${encodeURIComponent(
         process.env.MONGOPASSWORD
-      )}@leetcode-clone.upirzre.mongodb.net/?retryWrites=true&w=majority`
+      )}@leetcode-clone.upirzre.mongodb.net/leetcode-clone?retryWrites=true&w=majority`
     )
     .then((response) => {
       console.log("Succesfully connected to mongoDB");

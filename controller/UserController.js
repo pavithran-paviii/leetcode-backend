@@ -2,6 +2,7 @@ const { createUser, findUserByEmail } = require("../helpers/user");
 const User = require("../model/User");
 
 const bcrypt = require("bcrypt");
+const asyncHandler = require("express-async-handler");
 
 module.exports = {
   get: async (req, res) => {
@@ -15,26 +16,23 @@ module.exports = {
     }
   },
 
-  createuser: async (req, res, next) => {
+  createuser: asyncHandler(async (req, res, next) => {
     const { username, email, password } = req.body;
     const userExist = await findUserByEmail(email);
 
     if (userExist?.length > 0) {
       res.status(409).json({ message: "User already exist!" });
     } else {
-      try {
-        const createuser = await createUser(username, email, password);
+      const createuser = await createUser(username, email, password);
 
-        if (createuser) {
-          res.status(200).json({ message: "User created successfully!!!" });
-        } else {
-          res.status(500).json({ message: "Error while creating user" });
-        }
-      } catch (error) {
-        res.status(500).json({ message: "Server error while create user" });
+      if (createuser) {
+        res.status(200).json({ message: "User created successfully!!!" });
+      } else {
+        res.status(400);
+        throw new Error("All fields are mandatory!");
       }
     }
-  },
+  }),
 
   loginFunc: async (req, res) => {
     const { email, password } = req.body;

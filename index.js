@@ -9,6 +9,7 @@ const userRoute = require("./routes/User");
 const problemRoute = require("./routes/Problem");
 
 const connectMongoDB = require("./mongoDB");
+const errorHandler = require("./middleware/errorHandler");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,6 +25,8 @@ app.use((req, res, next) => {
 //routes
 app.use("/", userRoute);
 app.use("/problem", problemRoute);
+
+app.use(errorHandler);
 
 app.listen("3000", () => {
   console.log("Running on port 3000");

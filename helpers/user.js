@@ -13,7 +13,7 @@ async function createUser(username, email, password) {
     });
     return user;
   } catch (error) {
-    console.log("Error while creating user", error.message);
+    // console.log("Error while creating user", error.message);
     return false;
   }
 }
