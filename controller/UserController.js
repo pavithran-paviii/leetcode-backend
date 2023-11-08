@@ -65,4 +65,30 @@ module.exports = {
         .json({ status: false, message: "Server error while login" });
     }
   },
+
+  submitProblem: async (req, res) => {
+    const { userId, problemId } = req.body;
+
+    try {
+      if (!userId || !problemId) {
+        return res
+          .status(400)
+          .json({ message: "All fields required while submitting problem" });
+      }
+
+      const user = await User.findByIdAndUpdate(
+        userId,
+        {
+          $push: { solved_problem: problemId },
+        },
+        { new: true }
+      );
+
+      // You can send a success response here if needed
+      return res.status(200).send("Submitted successfully");
+    } catch (error) {
+      console.log("Error while submitting problem:", error?.message);
+      return res.status(500).json("Server error while submitting problem");
+    }
+  },
 };

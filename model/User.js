@@ -4,7 +4,12 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  solved_problem: { type: Array, required: true },
+  solved_problem: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Problem", // Replace 'OtherSchema' with the actual model name
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

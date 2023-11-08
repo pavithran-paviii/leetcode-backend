@@ -5,4 +5,8 @@ function problemFinder(question) {
   return problem;
 }
 
-module.exports = { problemFinder };
+const requiredFields = Object.keys(Problem.schema.paths).filter(
+  (field) => Problem.schema.paths[field].isRequired
+);
+
+module.exports = { problemFinder, requiredFields };

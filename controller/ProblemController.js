@@ -1,4 +1,4 @@
-const { problemFinder } = require("../helpers/problem");
+const { problemFinder, requiredFields } = require("../helpers/problem");
 const Problem = require("../model/Problem");
 
 module.exports = {
@@ -20,29 +20,31 @@ module.exports = {
     try {
       const problemExist = await problemFinder(question);
       if (problemExist?.length > 0) {
-        res.status(200).send("Problem already exist");
-      } else {
-        const problem = await Problem.create({
-          question,
-          description,
-          problemId,
-          acceptance,
-          difficulty,
-          examples,
-        });
-
-        console.log(problem, "problem created");
-
-        res.status(200).send("Problem created successful");
+        return res.status(200).send("Problem already exist");
       }
+
+      const missingFields = requiredFields.filter((field) => !req.body[field]);
+
+      // if (missingFields.length > 0) {
+      //   res.status(400);
+      //   throw new Error(`Missing required fields: ${missingFields.join(", ")}`);
+      // }
+
+      const problem = await Problem.create({
+        question,
+        description,
+        problemId,
+        acceptance,
+        difficulty,
+        examples,
+      });
+
+      // console.log(problem, "problem created");
+
+      res.status(200).send("Problem created successful");
     } catch (error) {
+      console.log(error?.message, "create problem error");
       res.status(500).send("Server error while creating problem");
     }
-  },
-
-  submitProblem: async (req, res) => {
-    const { submission } = req.body;
-
-    res.status(200).send("Submitted successfully");
   },
 };

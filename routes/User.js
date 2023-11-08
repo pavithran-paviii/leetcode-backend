@@ -9,4 +9,6 @@ router.post("/signup", controller.createuser);
 
 router.post("/login", controller.loginFunc);
 
+router.post("/submitproblem", controller.submitProblem);
+
 module.exports = router;

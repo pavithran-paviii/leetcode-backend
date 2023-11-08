@@ -8,6 +8,4 @@ router.get("/", controller.get);
 
 router.post("/", controller.createProblem);
 
-router.post("/submission", controller.submitProblem);
-
 module.exports = router;
