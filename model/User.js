@@ -6,8 +6,11 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   solved_problem: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Problem", // Replace 'OtherSchema' with the actual model name
+      problem_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Problem", // Replace 'OtherSchema' with the actual model name
+      },
+      percentage: { type: Number, required: true },
     },
   ],
 });

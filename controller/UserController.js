@@ -7,7 +7,7 @@ const asyncHandler = require("express-async-handler");
 module.exports = {
   get: async (req, res) => {
     try {
-      const user = await User.find();
+      const user = await User.find().populate("solved_problem.problem_id");
       // console.log(user, "User");
       res.status(200).send(user);
     } catch (error) {
@@ -79,13 +79,18 @@ module.exports = {
       const user = await User.findByIdAndUpdate(
         userId,
         {
-          $push: { solved_problem: problemId },
+          $addToSet: {
+            solved_problem: { problem_id: problemId, percentage: 60 },
+          },
         },
         { new: true }
       );
 
+      if (!user) {
+        return res.status(200).json({ message: "User not exist!" });
+      }
       // You can send a success response here if needed
-      return res.status(200).send("Submitted successfully");
+      return res.status(200).send({ message: "Submitted successfully" });
     } catch (error) {
       console.log("Error while submitting problem:", error?.message);
       return res.status(500).json("Server error while submitting problem");
