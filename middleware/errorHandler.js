@@ -39,6 +39,13 @@ const errorHandler = (err, req, res, next) => {
         stackTrace: err.stack,
       });
       break;
+    case errorCodes.ALREADY_EXIST:
+      res.json({
+        title: "Already Exist!",
+        message: err.message,
+        stackTrace: err.stack,
+      });
+      break;
     default:
       console.log("No Error, All good!");
       break;

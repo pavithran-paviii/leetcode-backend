@@ -21,16 +21,17 @@ module.exports = {
     const userExist = await findUserByEmail(email);
 
     if (userExist?.length > 0) {
-      res.status(409).json({ message: "User already exist!" });
-    } else {
-      const createuser = await createUser(username, email, password);
+      res.status(409);
+      throw new Error("User already exist!");
+    }
 
-      if (createuser) {
-        res.status(200).json({ message: "User created successfully!!!" });
-      } else {
-        res.status(400);
-        throw new Error("All fields are mandatory!");
-      }
+    const createuser = await createUser(username, email, password);
+
+    if (createuser) {
+      res.status(200).json({ message: "User created successfully!!!" });
+    } else {
+      res.status(400);
+      throw new Error("All fields are mandatory!");
     }
   }),
 
